@@ -47,3 +47,45 @@ func PrometheusStructure(data interface{}, skip []string) string {
 
 	return buffer.String()
 }
+
+func PrometheusStructure(data interface{}, skip []string) string {
+	skipSet := make(map[string]bool)
+	for _, v := range skip {
+		skipSet[v] = true
+	}
+
+	t := reflect.TypeOf(data)
+	v := reflect.ValueOf(data)
+	var buffer bytes.Buffer
+	for i := 0; i < v.NumField(); i++ {
+		fieldName := t.Field(i).Name
+		fieldComment := ""
+		if _, ok := skipSet[fieldName]; ok {
+			continue
+		}
+		tag := string(t.Field(i).Tag)
+
+		if match := reStructureTag.FindStringSubmatch(tag); match != nil {
+			fieldName = match[1]
+			fieldComment = match[2]
+		}
+
+		fieldValue := v.Field(i)
+		fieldType := v.Field(i).Type()
+
+		if fieldType == reflect.TypeOf(&histogram.Histogram{}) {
+			//reflect.ValueOf(&t).MethodByName("Foo").Call([]reflect.Value{})
+			inArgs := make([]reflect.Value, 2)
+			inArgs[0] = reflect.ValueOf(fieldName)
+			inArgs[1] = reflect.ValueOf(fieldComment)
+			output := fieldValue.MethodByName("Prometheus").Call(inArgs)
+			s, _ := output[0].Interface().(string)
+			buffer.WriteString(s)
+		} else {
+			buffer.WriteString(fmt.Sprintf("HELP %s %s\nTYPE %s counter\n%s %v\n", fieldName, tag, fieldName, fieldName, fieldValue))
+		}
+	}
+
+	return buffer.String()
+}
+
