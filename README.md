@@ -26,3 +26,30 @@ Returns
 	status5xx 0
 
 which is accidentally what Prometheus would generate 
+
+```
+You can also initialize a structure of Prometheus counters 
+var statistics struct {
+	Hit                  prometheus.Counter
+}
+
+func registerPrometheusCounters(data interface{}) {
+	v := reflect.ValueOf(data).Elem()
+	t := v.Type()
+	for i := 0; i < t.NumField(); i++ {
+		tag := string(t.Field(i).Tag)
+		fieldName := t.Field(i).Name
+		if len(tag) == 0 {
+			tag = fieldName
+		}
+		newCounter := prometheus.NewCounter(prometheus.CounterOpts{
+			Name: tag,
+			Help: tag,
+		})
+		f := v.Field(i)
+		f.Set(reflect.ValueOf(newCounter))
+		prometheus.Register(newCounter)
+	}
+}
+registerPrometheusCounters(&statistics)
+```
