@@ -27,8 +27,9 @@ Returns
 
 which is accidentally what Prometheus would generate 
 
-```
 You can also initialize a structure of Prometheus counters 
+
+```Go
 var statistics struct {
 	Hit                  prometheus.Counter
 }
