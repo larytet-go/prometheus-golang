@@ -3,12 +3,13 @@
 
 Given a structure 
 
-	statistics struct {
-		ticker                 uint64 `1s tick implemented in the code`
-		hits                   uint64 `Count of hits of the HTTP server, includes debug interfaces`
-		hitApi                 uint64 `Count of the API calls`
-		status5xx              uint64 `Number of 5xx errors returned by the API`
-	}
+```Go
+statistics struct {
+	ticker                 uint64 `1s tick implemented in the code`
+	hits                   uint64 `Count of hits of the HTTP server, includes debug interfaces`
+	hitApi                 uint64 `Count of the API calls`
+	status5xx              uint64 `Number of 5xx errors returned by the API`
+}
 	
 Returns
 
