@@ -12,7 +12,7 @@ statistics struct {
 }
 ```
 
-Returns
+Call to PrometheusStructure() returns
 
 	HELP ticker 1s tick implemented in the code
 	TYPE ticker counter
