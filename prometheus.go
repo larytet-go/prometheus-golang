@@ -3,21 +3,12 @@ package go_utils
 import (
 	"bytes"
 	"fmt"
-	zaplogger "go.uber.org/zap"
-	"go.uber.org/zap/zapcore"
-	"net"
-	"net/http"
-	"net/textproto"
-	"os"
-	"path/filepath"
 	"reflect"
 	"regexp"
 	"runtime"
 	"runtime/debug"
 	"sort"
-	"strconv"
 	"strings"
-	_ "unsafe" // required to use //go:linkname
 )
 
 // Return text compliant with what https://github.com/prometheus produces
